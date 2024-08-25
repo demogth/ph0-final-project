@@ -2,11 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!--    Не забудьте импортировать css файл. Удалите эту строчку-->
-    <!--    Не забудьте импортировать js файл. Всегда используйте атрибут defer в теге script при импорте js файла. Удалите эту строчку-->
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+    <script src="./index.js" defer></script>
     <title>Транслит</title>
 </head>
 <body>
+    <h1>T.R.A.N.S.L.I.T.</h1>
+    <main>
 
+        <section class="input-section">
+            <input class="input-form" type="text" placeholder="Начните вводить текст">
+            <button class="add-line-button">Добавить</button>
+        </section>
+
+        <section class="trns-notes">
+
+            <div class="note-line very-first-one">
+                <div class="rus-line">
+                    <span class="note-index">1</span>
+                    <span class="the-rus-text">Привет!</span>
+                </div>
+
+                <div class="trns-line">
+                    <span class="note-index">1</span>
+                    <span class="the-trns-text">Privet!</span>
+                </div>
+            </div>
+
+        </section>
+    </main>
 </body>
 </html>
