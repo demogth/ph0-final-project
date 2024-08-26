@@ -14,7 +14,14 @@ const translitMap = {
     'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'Ts', 'Ч': 'Ch',
     'Ш': 'Sh', 'Щ': 'Sch', 'Ъ': "'", 'Ы': 'Y', 'Ь': "'",
     'Э': 'E', 'Ю': 'Yu', 'Я': 'Ya'
-  };
+};
+
+function isTextLong(text) {
+    if (text.length >= 7) {
+        return true
+    }
+    return false
+}
 
 function getTranslitedText(text) {
     let translitedText = ''
@@ -32,41 +39,97 @@ function getTranslitedText(text) {
 function createElement(tag, className) {
     let element = document.createElement(tag)
     element.className = className;
+
     return element;
 }
 
-function createNoteLine(inputText, trnsText) {
-    const allNotesContainer = document.querySelector('.trns-notes')
-    let indexCounter = allNotesContainer.children.length;
-    
-    let lineContainer = createElement('div', 'note-line');
-    let ruslineContainer = createElement('div', 'rus-line')
-    let trnslineCOntainer = createElement('div', 'trns-line')
+function visibilityToggle(element, targetElement) {
 
-    let lineIndex = createElement('span', 'note-index')
-    lineIndex.innerText = indexCounter + 1;
-
-    let rusText = createElement('span', 'the-rus-text');
-    rusText.innerText = rusText;
-
-    let trnsText = createElement('span', 'the-trns-text');
-    trnsText.innerText = getTranslitedText(inputText);
-
-    
-
-
-    return(`<div class="note-line">
-        <div class="rus-line">
-            <span class="note-index">1</span>
-            <span class="the-rus-text">${'text'}!</span>
-        </div>
-
-        <div class="trns-line">
-            <span class="note-index">1</span>
-            <span class="the-trns-text">${getTranslitedText('text')}!</span>
-        </div>
-    </div>`)
+    element.addEventListener('mouseover', () => {
+        targetElement.style.display = 'block';
+    })
+    element.addEventListener('mouseout', () => {
+        targetElement.style.display = 'none';
+    })
 }
 
-createNoteLine()
+function createHalfLine(inputText, indexCounter=null, rusLang=false) {
+    let text = inputText;
+    let halfLineContainer;
+    let halfLineText;
 
+    if (rusLang && text) {
+        halfLineContainer = createElement('div', 'rus-line');
+        halfLineText = createElement('span', 'the-rus-text');
+        let index = createElement('span', 'note-index');
+        index.innerText = indexCounter + 1;
+
+        halfLineContainer.appendChild(index);
+    } else {
+        text = getTranslitedText(text);
+        halfLineContainer = createElement('div', 'trns-line');
+        halfLineText = createElement('span', 'the-trns-text');
+        halfLineContainer.appendChild(halfLineText)
+    }
+
+    if (isTextLong(text)) {
+        halfLineText.innerText = text.slice(0, 6) + '...'
+        let tooltip = createElement('span', 'hidden-tooltip');
+        tooltip.innerText = text;
+        visibilityToggle(halfLineText, tooltip);
+        halfLineContainer.appendChild(tooltip);
+    } else {
+        halfLineText.innerText = getTranslitedText(inputText);
+    }
+
+    halfLineContainer.appendChild(halfLineText);
+    
+    return halfLineContainer
+}
+
+function collectLine(lineContainer, rusHalfLine, trnsHalfLine) {
+    lineContainer.appendChild(rusHalfLine);
+    lineContainer.appendChild(trnsHalfLine);
+
+    return lineContainer
+};
+
+function addLine(parentElement, childElement) {
+    console.log('parentElement', parentElement)
+    console.log('element', childElement)
+    parentElement.appendChild(childElement);
+}
+
+const allNotesContainer = document.querySelector('.trns-notes')
+
+
+function lineBuilder () {
+    let indexCounter = allNotesContainer.children.length;
+    console.log('index', indexCounter)
+
+    let inputText = inputForm.value;
+    console.log('input text', inputText)
+
+    let rusHalfLine = createHalfLine(inputText, indexCounter, rusLang=true);
+    let trnsHalfLine = createHalfLine(inputText, indexCounter=false, rusLang=false);
+
+    let lineContainer = createElement('div', 'note-line');
+    let newLine = collectLine(lineContainer, rusHalfLine, trnsHalfLine);
+
+    addLine(allNotesContainer, newLine)
+
+}
+
+let inputForm = document.querySelector('.input-form')
+inputForm.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        lineBuilder()
+    }
+})
+
+const addButton = document.querySelector('.add-line-button');
+addButton.addEventListener('click', () => {
+    lineBuilder()
+})
+
+inputForm.value = ''

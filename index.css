@@ -48,15 +48,23 @@ main {
     color: white;
 }
 
+.add-line-button:active {
+    background-color: red;
+}
+
 .trns-notes {
     display: flex;
     flex-direction: column;
+    border-radius: 10px;
+    z-index: 10;
+    /* overflow: hidden; */
 }
 
 .note-line {
     display: flex;
     width: 500px;
     height: 50px;
+    /* border: 1px solid black; */
 }
 
 .rus-line,
@@ -65,7 +73,7 @@ main {
     width: 250px;
     justify-content: flex-start;
     align-items: center;
-    border: 1px solid black;
+    position: relative;
 
 }
 
@@ -76,4 +84,30 @@ main {
 .the-rus-text,
 .the-trns-text {
     padding-left: 37px;
+    color: black;
+    opacity: 1;
+}
+
+.hidden-tooltip {
+    width: fit-content;
+    display: none;
+    position: absolute;
+    bottom: 40px;
+    left: 42.7px;
+    background-color: white;
+    padding: 8px 16px 10px 16px;
+    border-radius: 5px;
+    /* overflow: visible; */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.very-first-one {}
+
+.rus-line {
+    background-color: #F0F0F0;
+}
+
+.trns-line {
+    background-color: #000000;
+    opacity: 0.1;
 }
